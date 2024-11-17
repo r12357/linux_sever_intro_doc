@@ -1,2 +1,6 @@
-/linux_guide.dvi
-/linux_guide.synctex.gz
+/*.dvi
+/*.aux
+/*.log
+/*.out
+/*.gz
+/*.toc
