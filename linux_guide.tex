@@ -54,6 +54,20 @@ pdfkeywords={}
   }
 }
 
+\tcbset{
+    terminalbox/.style={
+        colback=black,
+        coltext=white,
+        boxrule=0pt,
+        sharp corners,
+        fontupper=\ttfamily,
+        boxsep=5pt,
+        arc=2mm
+    }
+}
+
+
+
 \definecolor{brandblue}{rgb}{0.34, 0.7, 1}
 \newtcolorbox{mainbox}[1]{
   colframe=brandblue,
@@ -192,11 +206,35 @@ USBを挿してrufusを開くと次のようなウィンドウが出現する．
 「選択」から先程ダウンロードしたUbuntuのisoファイルを選択して，スタートを選択する．これでUbuntuを起動する準備が整った．
 
 \section{Ubuntuとの邂逅}
-BIOSを起動して，Bootの順位を変更してUbuntuを一番上に変更する．
-これによりUbuntuが起動する．
+isoファイルを入れたUSBを挿し込んでBIOSを起動する．
+そして，Bootの順位を変更してUbuntuを一番上に変更する．
+これによりUbuntuが起動する．\\
+まず初めに現時点では，Ubuntuに
+IMEが導入されていないため日本語が入力できない．
+これを解消するためにMozcをダウンロードしよう．\\
+ターミナルを開いて以下を実行するとダウンロードが完了する．
+
+\begin{tcolorbox}[terminalbox]
+  $\sim$\$ sudo apt update\\
+  $\sim$\$ sudo apt -y install ibus-mozc
+\end{tcolorbox}
+
+
+\begin{subbox}{Mozcについて}
+
+\end{subbox}
+
+
+\begin{subbox}{-yについて}
+
+\end{subbox}
 
 
 
+
+
+\appendix
+\chapter{コマンドシート}
 
 
 \end{document}
