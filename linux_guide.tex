@@ -247,6 +247,11 @@ IMEが導入されていないため日本語が入力できない．
 \end{tcolorbox}
 
 
+{\Huge
+\textbf{忘れないうちに，ここで超重要なことを教えよう．}
+\textbf{実行中のコマンドを強制終了するのはCtrl+cで行うことができる．}
+}
+
 \begin{subbox}{Mozcについて}
 
 \end{subbox}
@@ -309,7 +314,7 @@ viエディタは二つのモードが存在する．
 \end{itemize}
 
 
-\begin{subbox}[viとvim]
+\begin{subbox}{viとvim}
 
 \end{subbox}
 
@@ -318,6 +323,72 @@ viエディタは二つのモードが存在する．
 \chapter{Webサーバー}
 \section{Apache}
 本書では，WebサーバーとしてApacheを紹介する．\\
+まず以下のコマンドでApacheをインストールしよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo apt update
+  \$ sudo apt -y install apache2
+\end{tcolorbox}
+インストールが完了したら早速Apacheを起動しよう！
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl start apache2
+\end{tcolorbox}
+これが起動コマンドである．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl enable apache2
+\end{tcolorbox}
+これはApacheの自動起動の有効化を行うコマンドである．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl status apache2
+\end{tcolorbox}
+これはApacheの現在の状態(ステータス)を表示するコマンドである．
+ステータスのActiveの部分が\textcolor{green}{active(running)}になっていれば
+Apacheが動いている．\\
+最後に，ブラウザから「http://localhost」と入力すると
+Apacheのウェルカムページ(Apache2 Default Pageと書かれたページ)が
+表示されたら成功である．
+\section{Apacheの設定}
+Apacheの設定ファイルはサーバー全体に適応されるグローバル設定ファイル「/etc/apache2/apache2.conf」や
+デフォルトでアクセスされる仮想ホストに適応される設定ファイル「/etc/apach2/sites-available/000-default.conf」で管理される．\\
+仮想ホストに適応される設定ファイルについて変更を加えていこう．\\
+まず，000-default.confの中身を以下に示す．(ただしコメントアウトは削除している．)
+\begin{tcolorbox}[terminalbox]
+  <VirtualHost *:80>\\
+  \qquad ServerAdmin webmaster@localhost\\
+  \qquad  DocumentRoot /var/www/html\\
+  \qquad  ErrorLog \$\{APACHE\_LOG\_DIR\}/error.log\\
+  \qquad  CustomLog \$\{APACHE\_LOG\_DIR\}/access.log combined\\
+  </VirtualHost>
+\end{tcolorbox}
+上から見ていこう．
+\begin{tcolorbox}[terminalbox]
+  ServerAdmin webmaster@localhost
+\end{tcolorbox}
+とはApacheがエラー表示を行う場合などに問い合わせ先となる
+連絡先メールアドレスまたは参照先URLを設定するのに使用．
+\begin{tcolorbox}[terminalbox]
+  DocumentRoot /var/www/html
+\end{tcolorbox}
+DocumentRootはWebページを配置するディレクトリである．この場合
+Apacheのウェルカムページは/var/www/htmlディレクトリにあることがわかる．
+\begin{tcolorbox}[terminalbox]
+  ErrorLog \$\{APACHE\_LOG\_DIR\}/error.log
+\end{tcolorbox}
+はサーバーのエラーログをどこに保存するかを設定します．
+\$\{APACHE\_LOG\_DIR\}は環境変数であって，Ubuntuにおいては
+/etc/apache2/envvarsファイル内で定義されています．
+私の実行環境では/var/log/apache2でした．
+\begin{tcolorbox}[terminalbox]
+  CustomLog \$\{APACHE\_LOG\_DIR\}/access.log combined
+\end{tcolorbox}
+はサーバーのアクセスログをどこに保存するかを設定します．
+combinedは，アクセスログのフォーマットを指定するもの．\\
+また，
+\begin{tcolorbox}[terminalbox]
+  DirectoryIndex \textcolor{red}{ファイル名}
+\end{tcolorbox}
+で表示するhtmlファイルを指定することができる．
+
+\subsection{仮想ホストの作成}
 
 
 
