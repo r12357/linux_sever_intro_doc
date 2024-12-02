@@ -438,8 +438,118 @@ combinedは，アクセスログのフォーマットを指定するもの．\\
 \begin{tcolorbox}[terminalbox]
   \$ sudo systemctl reload apache2
 \end{tcolorbox}
-今，
+いま，「http://localhost」にアクセスしたら「403 Forbidden」が表示されるはずだ．
+これを解消するためにグローバル設定ファイル(/etc/apache2/apache2.conf)
+を編集しよう．
+以下のように書かれている部分をみよう．
+\begin{tcolorbox}[terminalbox]
+  <Directory /www/html>\\
+  \qquad Options Indexes FollowSymLinks\\
+  \qquad AllowOverride None\\
+  \qquad Require all granted\\
+  </Directory>
+\end{tcolorbox}
+これはデフォルトのDocumentRootに対する設定であって，
+\begin{tcolorbox}[terminalbox]
+  <Directory /www/html>
+\end{tcolorbox}
+を
+\begin{tcolorbox}[terminalbox]
+  <Directory /hoge>
+\end{tcolorbox}
+に変更して
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl reload apache2
+\end{tcolorbox}
+設定を反映させよう．
+\begin{subbox}{403 Forbidden}
+  今回なぜ403 Forbiddenが出たのかと言うと，Apacheが/hogeにアクセスする権限がないためである．そのため/hogeにアクセスしてもいいですよ．
+  ということを先ほどの設定でする必要がある．
+\end{subbox}
 
+\subsection{ファイアーウォールの設定}
+Ubuntuでは，ファイアーウォールは\textbf{ufwコマンド}を用いる．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo ufw enable
+\end{tcolorbox}
+これでファイアーウォールを有効化
+\begin{tcolorbox}[terminalbox]
+  \$ sudo ufw allow Apache
+\end{tcolorbox}
+80番ポートの開放
+\begin{tcolorbox}[terminalbox]
+  \$ sudo ufw status
+\end{tcolorbox}
+これでufwの状態を確認することができる．\\
+うまく行っていればToの下にApache,Apache(v6)，Actionの下にALLOW，Fromの下に
+Anywhere,Anywhere(v6)と出るはずである．
+
+
+\chapter{Docker}
+さてDockerのインストールから早速行う  ．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo apt update
+\end{tcolorbox}
+お決まりのアップデート
+\begin{tcolorbox}[terminalbox]
+  \$ sudo apt install ca-certificates curl
+\end{tcolorbox}
+ca-certificatesとcurlのインストールである．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo install -m 0755 -d /etc/apt/keyrings
+\end{tcolorbox}
+\begin{tcolorbox}[terminalbox]
+  \$ sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+\end{tcolorbox}
+\begin{tcolorbox}[terminalbox]
+  \$ sudo chmod a+r /etc/apt/keyrings/docker.asc
+\end{tcolorbox}
+\begin{tcolorbox}[terminalbox]
+  \$ echo "deb [arch=\$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \$(./etc/os-release \&\& echo "\$VERSION\_CODENAME") stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+\end{tcolorbox}
+
+\begin{tcolorbox}[terminalbox]
+  \$ sudo apt update
+\end{tcolorbox}
+\begin{tcolorbox}[terminalbox]
+  \$ sudo apt install docker-ce docker-ce-li containerd.io docker-buildx-plugin docker-compose-plugin
+\end{tcolorbox}
+Dockerのインストールが完了したことを確認するためにバージョンと状態確認を行う．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo docker --version\\
+  \$ sudo systemctl status docker
+\end{tcolorbox}
+
+\section{Dockerを使う}
+以下のコマンドでコンテナを起動する．
+\begin{tcolorbox}[terminalbox]
+  \$ docker container run \textcolor{red}{IMAGE}
+\end{tcolorbox}
+さてHello Worldに相当するものを実行してみよう．
+
+\begin{tcolorbox}[terminalbox]
+  \$ docker container run hello-world
+\end{tcolorbox}
+実行すれば，チュートリアルやドキュメントのURLが記載されてるものが出てくるだろう．\\
+コンテナ一覧を確認するには
+\begin{tcolorbox}[terminalbox]
+  \$ docker container ls
+\end{tcolorbox}
+を実行する．
+
+\section{Dockerを用いたWebサーバー}
+httpdというイメージを用いてコンテナを起動することでWebサーバーを起動することができる．まずサーバー管理用のディレクトリを作成しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ mkdir -p $\sim$/dockertest/htdocs $\sim$/dockertest/conf
+\end{tcolorbox}
+次にhttpdコンテナを起動しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ cd $\sim$/dockertest\\
+  \$ docker run -dit --name my-apache-app -p 8080:80 -v ./htdocs:/usr/local/apache2/htdocs/ -v ./conf:/usr/apache2/conf httpd:2.4
+\end{tcolorbox}
+「-v ./htdocs:/usr/apache2/htdocs/」や「-v ./conf:/usr/apache2/conf」によって
+「$\sim$/dockertest/htdocs」や「$\sim$/dockertest/conf」に配置されたファイルがコンテナに反映されるようになる．
+例えば，「$\sim$/dockertest/htdocs」の直下にindex.htmlを配置すると，その内容がアクセス時に表示される．
 
 
 
