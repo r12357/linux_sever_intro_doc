@@ -113,6 +113,11 @@ pdfkeywords={}
 \usepackage{calc}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
+\fancyhead[R]{\nouppercase{\leftmark}} 
+\fancyhead[L]{\nouppercase{\rightmark}}
+
+\setcounter{chapter}{0}
+\renewcommand{\thechapter}{\Roman{chapter}}
 
 \begin{document}
 
@@ -141,8 +146,11 @@ pdfkeywords={}
 \maketitle
 
 \setcounter{tocdepth}{2}
+
 \tableofcontents
 \clearpage
+
+\chapter{まえがき}
 
 \section{この文書について}
 Linuxのディストリビューションの一つであるUbuntuの導入からサーバーとしての利用の手順を
@@ -156,6 +164,25 @@ Linuxのディストリビューションの一つであるUbuntuの導入から
 \end{subbox}
 で書かれる文章は必ず読む必要はなく適当な補足であることにする．
 \section{実行環境} 
+\begin{itemize}
+  \item 空っぽのパソコン
+  \item WSL2:
+  \begin{enumerate}
+    \item[] WSLバージョン:2.3.26.0
+    \item[] カーネルバージョン:5.15.167.4-1
+    \item[] WSLgバージョン:1.0.65
+    \item[] MSRDCバージョン:1.2.5620
+    \item[] Direct3Dバージョン:1.611.1-81528511
+    \item[] DXCoreバージョン:10.0.26100.1-240331-1435.ge-release
+    \item[] Windowsバージョン:10.0.26100.2454
+  \end{enumerate}
+  WSL2内のUbuntuのバージョン:Ubuntu 22.04.5 LTS
+\end{itemize}
+
+
+
+
+
 \chapter{Ubuntuの導入}
 \section{Ubuntuのダウンロード}
 今回はUbuntu Japanese Teamから日本語環境のUbuntuのダウンロードをこのページ\url{https://www.ubuntulinux.jp/japanese}
@@ -215,8 +242,8 @@ IMEが導入されていないため日本語が入力できない．
 ターミナルを開いて以下を実行するとダウンロードが完了する．
 
 \begin{tcolorbox}[terminalbox]
-  $\sim$\$ sudo apt update\\
-  $\sim$\$ sudo apt -y install ibus-mozc
+  \$ sudo apt update\\
+  \$ sudo apt -y install ibus-mozc
 \end{tcolorbox}
 
 
@@ -229,12 +256,77 @@ IMEが導入されていないため日本語が入力できない．
 
 \end{subbox}
 
+\section{エディタ}
+UNIX系のOSでは，viエディタが標準で搭載されている．
+viエディタの基本的な使い方を紹介しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ vi \textcolor{red}{ファイル名}
+\end{tcolorbox}
+\noindent とすれば，エディタが起動する．\\
+viエディタは二つのモードが存在する．
+\begin{center}
+  \textbf{コマンドモード}$\rightleftarrows$ \textbf{インサートモード}
+\end{center}
+はじめに起動時には
+\textbf{コマンドモード}になっている．
+この状態では，テキストファイル内の文字列の編集はできず，入力された
+文字はコマンドとして認識される．\\
+とりあえず，覚えておくべきコマンドを紹介しよう．
+\begin{enumerate}
+  \item カーソル移動
+  \begin{itemize}
+    \item h\ :\ カーソルを一つ左に
+    \item j\ :\ カーソルを一つ下に
+    \item k\ :\ カーソルを一つ上に
+    \item l\ :\ カーソルを一つ右に
+    \item Ctrl+f\ : \ 次のページへ
+    \item Ctrl+b\ : \ 前のページへ
+  \end{itemize}
+  \item 切り取り/コピー/貼り付け
+  \begin{itemize}
+    \item x\ :\ カーソル位置の文字を切り取る(ほとんどDeleteの意味)
+    \item XX\ :\ カーソル位置の手前の文字を切り取る(ほとんどBackspaceの意味)
+    \item dd\ :\ カーソルのある行の切り取り
+    \item yy\ :\ カーソルのある行のコピー
+    \item p\ :\ カーソルのある行の下に貼り付け
+    \item P\ :\ カーソルのある行に貼り付け
+  \end{itemize}
+  \item ファイルの保存や終了など
+  \begin{itemize}
+    \item :w\ :\ ファイルの保存
+    \item :w ファイル名\ :\ 名前をつけてファイルを保存
+    \item :q\ :\ エディタの終了
+    \item :wq\ :\ :wをして:qするコマンド(i.e. ファイルを保存して終了)
+    \item !\ :\ 強制するコマンド．:q! $\leftarrow$ 強制終了, :wq! $\leftarrow$ 強制的に保存して終了
+  \end{itemize}
+\end{enumerate}
+もちろん\textbf{インサートモード}に移行するコマンドが存在する．
+インサートモードとはテキストを編集するモードのことである．
+\begin{itemize}
+  \item i\ :\ カーソルの位置からインサートモードに移行する．
+  \item a\ :\ カーソルの後ろからインサートモードに移行する．
+  \item o\ :\ カーソルのある行の下に空白行を追加してインサートモードに移行する．
+\end{itemize}
+
+
+\begin{subbox}[viとvim]
+
+\end{subbox}
+
+
+
+\chapter{Webサーバー}
+\section{Apache}
+本書では，WebサーバーとしてApacheを紹介する．\\
+
+
 
 
 
 
 \appendix
-\chapter{コマンドシート}
+\chapter{コマンド一覧}
+気が向けばコマンドについての一覧を作る．
 
 
 \end{document}
