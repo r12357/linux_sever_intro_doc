@@ -20,6 +20,7 @@
 \usepackage[all]{xy}
 \usepackage{url}
 \usepackage[most]{tcolorbox}
+\usepackage{microtype}
 
 \usepackage[%
 dvipdfmx, %欧文ではコメントアウトする
@@ -389,6 +390,57 @@ combinedは，アクセスログのフォーマットを指定するもの．\\
 で表示するhtmlファイルを指定することができる．
 
 \subsection{仮想ホストの作成}
+「/etc/apache2/sites-available/000-default.conf」が初期の仮想ホスト
+として設定されている．これを残したまま別の仮想ホストを作成する
+場合は，「/etc/apache2/sites-available/」直下に新たな設定ファイルを作成する．\\
+簡単のために，もとあった000-default.confをコピーするとよい．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo cp \textcolor{red}{コピーするファイル} \textcolor{red}{コピーした後のファイル名}
+\end{tcolorbox}
+なので，今回はtest.confという設定ファイルを作成しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo cp \textcolor{red}{/etc/apache2/sites-available/000-default.conf} \textcolor{red}{/etc/apache2/sites-available/test.conf}
+\end{tcolorbox}
+次に，DocumentRootとDirectoryIndexを変更しよう．
+今回は以下のように設定した．
+\begin{tcolorbox}[terminalbox]
+  <VirtualHost *:80>\\
+  \qquad ServerAdmin webmaster@localhost\\
+  \qquad DocumentRoot /hoge\\
+  \qquad DirectoryIndex hoge.html
+  \qquad ErrorLog \$\{APACHE\_LOG\_DIR\}/error.log\\
+  \qquad CustomLog \$\{APACHE\_LOG\_DIR\}/access.log combined\\
+  </VirtualHost>
+\end{tcolorbox}
+ディレクトリやファイルを作成しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo mkdir /hoge
+\end{tcolorbox}
+\begin{tcolorbox}[terminalbox]
+  \$ sudo touch /hoge/hoge.html\\
+  \$ sudo vi /hoge/hoge.html
+\end{tcolorbox}
+で適当なhtmlファイルを作成する．\\
+次に作成した仮想ホストを有効化したい
+有効化する前に今有効になっているデフォルトの仮想ホストを切断しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo a2dissite 000-default.conf
+\end{tcolorbox}
+次にこの設定をサーバーに反映させるためにリロードしよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl reload apache2
+\end{tcolorbox}
+さて，先ほど作成した仮想ホストを有効化しよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo a2ensite \textcolor{red}{test.conf}
+\end{tcolorbox}
+次に有効化した仮想ホストをサーバーに反映させよう．
+\begin{tcolorbox}[terminalbox]
+  \$ sudo systemctl reload apache2
+\end{tcolorbox}
+今，
+
+
 
 
 
